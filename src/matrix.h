@@ -16,14 +16,12 @@ using namespace std;
 // };
 
 class S21Matrix {
-    private:
-        // Attributes
-        int rows_, cols_;         // Rows and columns
-        double **matrix_;         // Pointer to the memory where the matrix is allocated
 
     public:
         S21Matrix();
         S21Matrix(int rows, int cols);              // Default constructor
+        S21Matrix(const S21Matrix& other);
+        // S21Matrix(S21Matrix&& other);
         ~S21Matrix();             // Destructor
 
         bool EqMatrix(const S21Matrix& other);
@@ -34,9 +32,12 @@ class S21Matrix {
         S21Matrix Transpose();
         S21Matrix CalcComplements();
         double Determinant();
-        double &operator()(int row, int col);
-        S21Matrix &operator=(const S21Matrix& A);
+        // S21Matrix InverseMatrix();
 
+        double &operator()(int row, int col);
+        double operator()(int row, int col) const;
+        S21Matrix &operator=(const S21Matrix& A);
+        // S21Matrix &operator=(S21Matrix&& A) noexcept;
 
 
 
@@ -47,6 +48,11 @@ class S21Matrix {
                 cout << endl;    
                 }
         }
+
+    private:
+        // Attributes
+        int rows_, cols_;         // Rows and columns
+        double **matrix_;         // Pointer to the memory where the matrix is allocated
         // Other methods..
         void GetMinor(double **mat, double **temp, int skip_row, int skip_col,
                    int n);

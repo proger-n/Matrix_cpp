@@ -28,12 +28,22 @@ S21Matrix::S21Matrix() : S21Matrix(1, 1) {
 }
 
 S21Matrix::S21Matrix(int rows, int cols) : rows_(rows), cols_(cols) {
-  if(this->rows_ > 0 && this->cols_ > 0) {
+  if(rows_ > 0 && cols_ > 0) {
     cout << "Вызов конструктора объекта" << this << endl;
-    this->matrix_ = new double*[rows_];
-    for(int i = 0; i < this->rows_; i++)
-        this->matrix_[i] = new double[cols_];
+    matrix_ = new double*[rows_]();
+    for(int i = 0; i < rows_; i++)
+    {
+        matrix_[i] = new double[cols_];
+    }
   } 
+}
+
+S21Matrix::S21Matrix(const S21Matrix& other) : S21Matrix(other.rows_, other.cols_) {
+  for(int i = 0; i < rows_; i++)
+    for(int j = 0; j < cols_; j++) {
+      matrix_[i][j] = other.matrix_[i][j];
+    }
+
 }
 
 S21Matrix::~S21Matrix() {
@@ -58,7 +68,7 @@ void S21Matrix::SumMatrix(const S21Matrix& other) {
     if(this->cols_ == other.cols_) {
         for(int i = 0; i < this->rows_; i++)
             for(int j = 0; j < this->cols_; j++)
-                this->matrix_[i][j] = this->matrix_[i][j] + other.matrix_[i][j];
+                this->matrix_[i][j] += other.matrix_[i][j];
     }
 }
 
@@ -66,7 +76,7 @@ void S21Matrix::SubMatrix(const S21Matrix& other) {
   if (this->rows_ == other.rows_ && this->cols_ == other.cols_) {
       for(int i = 0; i < this->rows_; i++)
             for(int j = 0; j < this->cols_; j++)
-                this->matrix_[i][j] += other.matrix_[i][j];
+                this->matrix_[i][j] -= other.matrix_[i][j];
   }
 }
 
@@ -90,18 +100,18 @@ void S21Matrix::MulMatrix(const S21Matrix& other) {
 }
 
 S21Matrix S21Matrix::Transpose() {
-  if (this->rows_ > 0 && this->cols_ > 0) {
-    S21Matrix matr_result(this->rows_, this->cols_);
-      for(int i = 0; i < this->rows_; i++)
-            for(int j = 0; j < this->cols_; j++)
-                matr_result.matrix_[i][j] = this->matrix_[i][j];
+  if (rows_ > 0 && cols_ > 0) {
+    S21Matrix matr_result(cols_, rows_);
+      for(int i = 0; i < matr_result.rows_; i++)
+            for(int j = 0; j < matr_result.cols_; j++)
+                matr_result.matrix_[i][j] = matrix_[j][i];
     return matr_result;
   } throw "Bad matrix!";
     
 }
 
 S21Matrix S21Matrix::CalcComplements() {
-  if (this->rows_ == this->cols_) {
+  if (rows_ == cols_) {
     S21Matrix matr_result(this->rows_, this->cols_);
     int size = (this->rows_) - 1;
     for (int i = 0; i < matr_result.rows_; i++) {
@@ -126,19 +136,35 @@ double S21Matrix::Determinant() {
   
 }
 
+// S21Matrix S21Matrix::InverseMatrix() {}
+
 double &S21Matrix::operator()(int row, int col){
+  if (this->rows_ > 0 && this->cols_ > 0) {
+    return this->matrix_[row][col];
+  } throw "Out of range!";
+}
+
+double S21Matrix::operator()(int row, int col) const{
     return this->matrix_[row][col];
 }
 
 S21Matrix &S21Matrix::operator=(const S21Matrix& other) {
-    if (this->rows_ == other.rows_ && this->cols_ == other.cols_) {
       for(int i = 0; i < this->rows_; i++)
         for(int j = 0; j < this->cols_; j++)
           this->matrix_[i][j] = other.matrix_[i][j];
       return *this;
-    }
-    throw "matrixes not equal!";
 }
+
+// S21Matrix &S21Matrix::operator=(S21Matrix&& other) {
+//   this->~S21Matrix();
+//   rows_=other.rows_;
+//   cols_=other.cols_;
+//   matrix_=other.matrix_;
+//   other.matrix_ = nullptr;
+//   other.rows_ = 0;
+//   other.cols_ = 0;
+//   return *this;
+// }
 
 void S21Matrix::GetMinor(double **mat, double **temp, int skip_row, int skip_col,
                    int n) {
@@ -190,15 +216,20 @@ double S21Matrix::CalculateDeterminant(S21Matrix mat, int size) {
     matr1(1, 1) = 1;
 
     matr2(0, 0) = 1;
-    matr2(0, 1) = 1;
-    matr2(1, 0) = 1;
-    matr2(1, 1) = 1;
-    matr3.SumMatrix(matr2);
+    matr2(0, 1) = 2;
+    matr2(1, 0) = 3;
+    matr2(1, 1) = 4;
+    matr1.Print();
+    matr1.MulNumber(3);
     matr1.Print();
     // matr2.CalcComplements();
     S21Matrix matr4(2,2);
-    matr4=matr1;
+    matr4=matr2.CalcComplements();  // оператор копирования
+    // matr4=std::move(matr1); //     оператор перемещения
+    matr2.Print();
     matr4.Print();
+    cout << "eq 1 and 2=" << matr1.EqMatrix(matr2) << endl;
+    cout << "eq 1 and 4=" << matr1.EqMatrix(matr4) << endl;
     // cout << "eq=" << matr2.Determinant() << endl;
     
     //  Point pt;
