@@ -198,6 +198,18 @@ S21Matrix& S21Matrix::operator-(const S21Matrix& other) {
   return result;
 }
 
+S21Matrix& S21Matrix::operator*(const S21Matrix& other) {
+  S21Matrix result(*this);
+  result.MulMatrix(other);
+  return result;
+}
+
+S21Matrix& S21Matrix::operator*(double d) {
+  S21Matrix result(*this);
+  result.MulNumber(d);
+  return result;
+}
+
 S21Matrix& S21Matrix::operator+=(const S21Matrix& other) {
   this->SumMatrix(other);
   return *this;
@@ -206,6 +218,21 @@ S21Matrix& S21Matrix::operator+=(const S21Matrix& other) {
 S21Matrix& S21Matrix::operator-=(const S21Matrix& other) {
   this->SubMatrix(other);
   return *this;
+}
+
+S21Matrix& S21Matrix::operator*=(const S21Matrix& other) {
+  this->MulMatrix(other);
+  return *this;
+}
+
+S21Matrix& S21Matrix::operator*=(double d) {
+  this->MulNumber(d);
+  return *this;
+}
+
+bool S21Matrix::operator==(const S21Matrix& other) {
+  S21Matrix result(*this);
+  return result.EqMatrix(other);
 }
 
 void S21Matrix::GetMinor(double** mat, double** temp, int skip_row,
@@ -251,7 +278,7 @@ int main() {
 
   S21Matrix matr1(3, 3);
   S21Matrix matr2(2, 2);
-  S21Matrix matr3;
+  S21Matrix matr3(2, 2);
   matr1(0, 0) = 1.1;
   matr1(0, 1) = 1;
   matr1(0, 2) = 1;
@@ -277,7 +304,8 @@ int main() {
   cout << "eq 1 and 2=" << matr1.EqMatrix(matr2) << endl;
   cout << "eq 1 and 4=" << matr1.EqMatrix(matr4) << endl;
   cout << "det=" << matr2.Determinant() << endl;
-  matr2-=matr4;
+  // matr3=matr1+matr4;
+  matr2*=3.3;
   matr2.Print();
   return 0;
 }

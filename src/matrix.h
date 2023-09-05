@@ -42,8 +42,13 @@ class S21Matrix {
   // S21Matrix &operator=(S21Matrix&& A) noexcept;
   S21Matrix& operator+(const S21Matrix& other);
   S21Matrix& operator-(const S21Matrix& other);
+  S21Matrix& operator*(const S21Matrix& other);
+  S21Matrix& operator*(double d);
   S21Matrix& operator+=(const S21Matrix& other);
   S21Matrix& operator-=(const S21Matrix& other);
+  S21Matrix& operator*=(const S21Matrix& other);
+  S21Matrix& operator*=(double d);
+  bool operator==(const S21Matrix& other);
 
   // temp funcs, delete them
   void Print() {
