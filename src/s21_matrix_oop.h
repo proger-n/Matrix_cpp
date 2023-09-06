@@ -10,7 +10,6 @@ class S21Matrix {
   S21Matrix(S21Matrix&& other);
   ~S21Matrix();
 
-
   bool EqMatrix(const S21Matrix& other);
   void SumMatrix(const S21Matrix& other);
   void SubMatrix(const S21Matrix& other);
@@ -25,15 +24,20 @@ class S21Matrix {
   double operator()(int row, int col) const;
   S21Matrix& operator=(const S21Matrix& other);
   S21Matrix& operator=(S21Matrix&& A) noexcept;
-  S21Matrix& operator+(const S21Matrix& other);
-  S21Matrix& operator-(const S21Matrix& other);
-  S21Matrix& operator*(const S21Matrix& other);
-  S21Matrix& operator*(double d);
+  S21Matrix operator+(const S21Matrix& other);
+  S21Matrix operator-(const S21Matrix& other);
+  S21Matrix operator*(const S21Matrix& other);
+  S21Matrix operator*(double d);
   S21Matrix& operator+=(const S21Matrix& other);
   S21Matrix& operator-=(const S21Matrix& other);
   S21Matrix& operator*=(const S21Matrix& other);
   S21Matrix& operator*=(const double d);
   bool operator==(const S21Matrix& other);
+
+  int get_row_size() const;
+  int get_col_size() const;
+  // void set_rows(int rows);
+  // void set_cols(int cols);
 
   // temp funcs, delete them
   void Print() {
@@ -43,6 +47,7 @@ class S21Matrix {
       std::cout << std::endl;
     }
   }
+
 
  private:
   // Attributes
