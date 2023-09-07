@@ -1,5 +1,5 @@
-#ifndef MATRIX_H_
-#define MATRIX_H_
+#ifndef S21_MATRIX_H_ON_CPP_MY_MATRIX_OOP_H_
+#define S21_MATRIX_H_ON_CPP_MY_MATRIX_OOP_H_
 #include <iostream>
 
 class S21Matrix {
@@ -7,47 +7,37 @@ class S21Matrix {
   S21Matrix();
   S21Matrix(int rows, int cols);
   S21Matrix(const S21Matrix& other);
-  S21Matrix(S21Matrix&& other);
+  S21Matrix(S21Matrix&& other) noexcept;
   ~S21Matrix();
 
-  bool EqMatrix(const S21Matrix& other);
+  double& operator()(int row, int col);
+  double operator()(int row, int col) const;
+  S21Matrix operator+(const S21Matrix& other);
+  S21Matrix operator-(const S21Matrix& other);
+  S21Matrix operator*(const S21Matrix& other);
+  S21Matrix operator*(double num);
+  S21Matrix& operator=(const S21Matrix& other);
+  S21Matrix& operator=(S21Matrix&& other) noexcept;
+  S21Matrix& operator+=(const S21Matrix& other);
+  S21Matrix& operator-=(const S21Matrix& other);
+  S21Matrix& operator*=(const S21Matrix& other);
+  S21Matrix& operator*=(const double num);
+  bool operator==(const S21Matrix& other);
+
+  bool EqMatrix(const S21Matrix& other) noexcept;
   void SumMatrix(const S21Matrix& other);
   void SubMatrix(const S21Matrix& other);
-  void MulNumber(const double num);
+  void MulNumber(const double num) noexcept;
   void MulMatrix(const S21Matrix& other);
   S21Matrix Transpose();
   S21Matrix CalcComplements();
   double Determinant();
   S21Matrix InverseMatrix();
 
-  double& operator()(int row, int col);
-  double operator()(int row, int col) const;
-  S21Matrix& operator=(const S21Matrix& other);
-  S21Matrix& operator=(S21Matrix&& A) noexcept;
-  S21Matrix operator+(const S21Matrix& other);
-  S21Matrix operator-(const S21Matrix& other);
-  S21Matrix operator*(const S21Matrix& other);
-  S21Matrix operator*(double d);
-  S21Matrix& operator+=(const S21Matrix& other);
-  S21Matrix& operator-=(const S21Matrix& other);
-  S21Matrix& operator*=(const S21Matrix& other);
-  S21Matrix& operator*=(const double d);
-  bool operator==(const S21Matrix& other);
-
-  int get_row_size() const;
-  int get_col_size() const;
-  // void set_rows(int rows);
-  // void set_cols(int cols);
-
-  // temp funcs, delete them
-  void Print() {
-    for (int i = 0; i < this->rows_; i++) {
-      for (int j = 0; j < this->cols_; j++)
-        std::cout << this->matrix_[i][j] << " ";
-      std::cout << std::endl;
-    }
-  }
-
+  int GetRows() const;
+  int GetCols() const;
+  void SetRows(int rows);
+  void SetCols(int cols);
 
  private:
   // Attributes
@@ -56,6 +46,7 @@ class S21Matrix {
   // Other methods..
   void GetMinor(double** mat, double** temp, int skip_row, int skip_col, int n);
   double CalculateDeterminant(double** mat, int size);
+  void CopyMatrix(double** matrix, int rows, int cols);
 };
 
-#endif
+#endif  // S21_MATRIX_H_ON_CPP_MY_MATRIX_OOP_H_
